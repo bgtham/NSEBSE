@@ -31,7 +31,7 @@ public class DataDownloadNSE {
 	public static void main(String[] args) throws InterruptedException, ParseException, IOException {
 		// TODO Auto-generated method stub
 		
-		System.setProperty("webdriver.gecko.driver","C:\\Users\\gburle\\Desktop\\Stocks\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver","C:\\Users\\gburle\\Desktop\\Stocks\\All_Softwares\\geckodriver.exe");
 		
 		String zipFilepath;
 		ProfilesIni profile = new ProfilesIni();
@@ -42,9 +42,12 @@ public class DataDownloadNSE {
 	    wait = new WebDriverWait(driver, 2000);
 	    
 	    org.joda.time.format.DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
-	    LocalDate startDate = dtf.withLocale(Locale.UK).parseLocalDate("01-01-2017");
-	    LocalDate endDate = dtf.withLocale(Locale.UK).parseLocalDate("30-04-2017");
+	    LocalDate startDate = dtf.withLocale(Locale.UK).parseLocalDate("04-12-2017");
+
+	    LocalDate endDate = dtf.withLocale(Locale.UK).parseLocalDate("06-01-2018");
 		int Loop = Days.daysBetween(startDate, endDate).getDays();
+		int count = 0;
+		System.out.println("loop -> " + Loop);
 
 		for (int i = 0; i <= Loop ; i++) {
 			
@@ -52,7 +55,7 @@ public class DataDownloadNSE {
 			DateToEnter = startDate.toString().split("-");
 			driver.navigate().refresh();
 		    Thread.sleep(3000);
-			driver.findElement(By.xpath("//select[@id='h_filetype']")).sendKeys("Bhav");
+			driver.findElement(By.xpath("//select[@id='h_filetype']")).sendKeys("B");
 			driver.findElement(By.xpath("//input[@id='date']")).clear();
 		    driver.findElement(By.xpath("//input[@id='date']")).sendKeys(DateToEnter[2]+"-"+DateToEnter[1]+"-"+DateToEnter[0]);
 		    Thread.sleep(1000);
@@ -66,13 +69,15 @@ public class DataDownloadNSE {
 		    try {
 		    	zipFilepath = "C:\\NSEDailyData\\" + driver.findElement(By.xpath("//a[contains(.,'csv.zip')]")).getText();
 		    	driver.findElement(By.xpath("//a[contains(.,'csv.zip')]")).click();
+		    	count++;
 		    	Thread.sleep(3000);
 		    	UnzipUtility.unzip(zipFilepath, "C:\\NSEDailyData\\");
 		    } catch (NoSuchElementException e) {
 		    	driver.findElement(By.xpath("//td[contains(.,'No file found for specified date. Try another date.')]"));
 		    }
-
+		    
 		}
+		System.out.println("Days ->" + count);
 		
 		driver.close();
 		driver.quit();
